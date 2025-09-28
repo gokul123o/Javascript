@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>BST Visualizer</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      text-align: center;
+    }
+    input {
+      padding: 6px;
+      margin: 8px;
+    }
+    button {
+      padding: 6px 12px;
+    }
+    svg {
+      border: 1px solid #ccc;
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+  <h2>Binary Search Tree Visualizer</h2>
+  <input type="number" id="valueInput" placeholder="Enter value" />
+  <button onclick="insertValue()">Insert</button>
+  <button onclick="deleteValue()">Delete</button>
+
+  <div id="tree-container">
+    <svg id="tree-svg" width="100%" height="600"></svg>
+  </div>
+
+<script>
+  class TreeNode {
+    constructor(value) {
+      this.value = value;
+      this.left = null;
+      this.right = null;
+      this.x = 0;
+      this.y = 0;
+    }
+  }
+
+  class BST {
+    constructor() {
+      this.root = null;
+    }
+
+    insert(value) {
+      const newNode = new TreeNode(value);
+      if (!this.root) {
+        this.root = newNode;
+        return;
+      }
+
+      let current = this.root;
+      while (true) {
+        if (value < current.value) {
+          if (!current.left) {
+            current.left = newNode;
+            return;
+          }
+          current = current.left;
+        } else if (value > current.value) {
+          if (!current.right) {
+            current.right = newNode;
+            return;
+          }
+          current = current.right;
+        } else {
+          return;
+        }
+      }
+    }
+
+    delete(value) {
+      this.root = this._deleteRec(this.root, value);
+    }
+
+    _deleteRec(root, value) {
+      if (!root) return null;
+
+      if (value < root.value) {
+        root.left = this._deleteRec(root.left, value);
+      } else if (value > root.value) {
+        root.right = this._deleteRec(root.right, value);
+      } else {
+        if (!root.left) return root.right;
+        if (!root.right) return root.left;
+
+        let successor = root.right;
+        while (successor.left) successor = successor.left;
+        root.value = successor.value;
+        root.right = this._deleteRec(root.right, successor.value);
+      }
+      return root;
+    }
+  }
+
+  function setNodePositions(node, x, y, gapX) {
+    if (!node) return;
+    
+    node.x = x;
+    node.y = y;
+    setNodePositions(node.left, x - gapX, y + 80, gapX / 2);
+    setNodePositions(node.right, x + gapX, y + 80, gapX / 2);
+  }
+
+  function drawNode(svg, x, y, value) {
+    const circle = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+    circle.setAttribute("cx", x);
+    circle.setAttribute("cy", y);
+    circle.setAttribute("r", 20);
+    circle.setAttribute("fill", "lightblue");
+    circle.setAttribute("stroke", "black");
+    svg.appendChild(circle);
+
+    const label = document.createElementNS("http://www.w3.org/2000/svg", "text");
+    label.setAttribute("x", x);
+    label.setAttribute("y", y);
+    label.setAttribute("text-anchor", "middle");
+    label.setAttribute("dominant-baseline", "middle");
+    label.textContent = value;
+    svg.appendChild(label);
+  }
+
+  function drawLine(svg, x1, y1, x2, y2) {
+    const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
+    line.setAttribute("x1", x1);
+    line.setAttribute("y1", y1);
+    line.setAttribute("x2", x2);
+    line.setAttribute("y2", y2);
+    line.setAttribute("stroke", "black");
+    svg.appendChild(line);
+  }
+
+  function drawTree(svg, node) {
+    if (!node) return;
+    if (node.left) {
+      drawLine(svg, node.x, node.y, node.left.x, node.left.y);
+      drawTree(svg, node.left);
+    }
+    if (node.right) {
+      drawLine(svg, node.x, node.y, node.right.x, node.right.y);
+      drawTree(svg, node.right);
+    }
+    drawNode(svg, node.x, node.y, node.value);
+  }
+
+  function clearSVG(svg) {
+    let count=0;
+    while (svg.firstChild) {
+      svg.removeChild(svg.firstChild);
+      count++;
+    }
+    console.log(count)
+  }
+
+  function renderTree() {
+    const svg = document.getElementById("tree-svg");
+    const width = svg.clientWidth || 800;
+    clearSVG(svg);
+    setNodePositions(bst.root, width / 2, 50, 120);
+    drawTree(svg, bst.root);
+  }
+
+  const bst = new BST();
+
+  function insertValue() {
+    const input = document.getElementById("valueInput");
+    const value = parseInt(input.value);
+    if (!isNaN(value)) {
+      bst.insert(value);
+      renderTree();
+      input.value = "";
+    }
+  }
+
+  function deleteValue() {
+    const input = document.getElementById("valueInput");
+    const value = parseInt(input.value);
+    if (!isNaN(value)) {
+      bst.delete(value);
+      renderTree();
+      input.value = "";
+    }
+  }
+</script>
+</html>

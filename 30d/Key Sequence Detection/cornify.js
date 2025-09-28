@@ -8,8 +8,8 @@ var cornify_add = function (options) {
   var cornify_url = "https://www.cornify.com/";
   var numType = "px";
   var heightRandom = Math.random() * 0.75;
-  var windowHeight = 768;
-  var windowWidth = 1024;
+  var elemHeight = 768;
+  var elemWidth = 1024;
   var height = 0;
   var width = 0;
   var de = document.documentElement;
@@ -24,13 +24,13 @@ var cornify_add = function (options) {
   div.style.outline = 0;
   div.onclick = cornify_add; // Click for more magic.
 
-  // Get the window width and height - requires some cross browser checking.
-  if (typeof window.innerHeight == "number") {
-    windowHeight = window.innerHeight;
-    windowWidth = window.innerWidth;
+  // Get the elem width and height - requires some cross browser checking.
+  if (typeof elem.innerHeight == "number") {
+    elemHeight = elem.innerHeight;
+    elemWidth = elem.innerWidth;
   } else if (de && de.clientHeight) {
-    windowHeight = de.clientHeight;
-    windowWidth = de.clientWidth;
+    elemHeight = de.clientHeight;
+    elemWidth = de.clientWidth;
   } else {
     numType = "%";
     height = Math.round(height * 100) + "%";
@@ -330,7 +330,7 @@ var cornami = {
   pattern: "38384040373937396665",
   clear: setTimeout("cornami.clear_input()", 5000),
   load: function () {
-    window.document.onkeydown = function (event) {
+    elem.document.onkeydown = function (event) {
       if (cornami.input == cornami.pattern) {
         cornify_add();
         clearTimeout(cornami.clear);

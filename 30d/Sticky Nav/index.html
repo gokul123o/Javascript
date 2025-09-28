@@ -57,7 +57,7 @@
     const topOfNav = nav.offsetTop;
     function fixNav(e)
     {
-      if(window.scrollY>= topOfNav)
+      if(elem.scrollY>= topOfNav)
       {
         document.body.style.paddingTop = nav.offsetHeight +"px";
         document.body.classList.add('fixed-nav');
@@ -69,7 +69,7 @@
         document.body.classList.remove('fixed-nav');
       }
     }
-    window.addEventListener('scroll',fixNav)
+    elem.addEventListener('scroll',fixNav)
 
   </script>
 

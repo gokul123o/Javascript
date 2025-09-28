@@ -38,8 +38,8 @@
     const coords = {
       width: linkCoords.width,
       height: linkCoords.height,
-      top: linkCoords.top + window.scrollY,
-      left: linkCoords.left + window.scrollX
+      top: linkCoords.top + elem.scrollY,
+      left: linkCoords.left + elem.scrollX
     };
 
     highlight.style.width = `${coords.width}px`;

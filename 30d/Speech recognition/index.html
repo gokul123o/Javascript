@@ -4,14 +4,54 @@
   <meta charset="UTF-8">
   <title>Speech Detection</title>
   <link rel="icon" href="https://fav.farm/✅" />
+  <style>
+    html {
+      font-size: 10px;
+    }
+
+    body {
+      background: #ffc600;
+      font-family: 'helvetica neue';
+      font-weight: 200;
+      font-size: 20px;
+    }
+
+    .words {
+      max-width: 500px;
+      margin: 50px auto;
+      background: white;
+      border-radius: 5px;
+      box-shadow: 10px 10px 0 rgba(0,0,0,0.1);
+      padding: 1rem 2rem 1rem 5rem;
+      background: -webkit-gradient(linear, 0 0, 0 100%, from(#d9eaf3), color-stop(4%, #fff)) 0 4px;
+      background-size: 100% 3rem;
+      position: relative;
+      line-height: 3rem;
+    }
+
+    p {
+      margin: 0 0 3rem;
+    }
+
+    .words:before {
+      content: '';
+      position: absolute;
+      width: 4px;
+      top: 0;
+      left: 30px;
+      bottom: 0;
+      border: 1px solid;
+      border-color: transparent #efe4e4;
+    }
+  </style>
 </head>
 <body>
 
-  <div class="words" contenteditable>
-  </div>
+  <div class="words" contenteditable></div>
 
   <script>
-    window.SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    // Initialize Web Speech API
+    elem.SpeechRecognition = elem.SpeechRecognition || elem.webkitSpeechRecognition;
 
     const recognition = new SpeechRecognition();
     recognition.interimResults = true;
@@ -27,60 +67,26 @@
         .map(result => result.transcript)
         .join('');
 
-    const pScript = transcript.replace(/hello|hi|hai|hei/, 'Welcome');
-    p.textContent = pScript;
+      // Replace greeting words with 'Welcome'
+      const pScript = transcript.replace(/hello|hi|hai|hei/gi, 'Welcome');
+      p.textContent = pScript;
 
-    if (e.results[0].isFinal) {
+      // When final result, create new <p> for next sentence
+      if (e.results[0].isFinal) {
         p = document.createElement('p');
         words.appendChild(p);
-    }
+      }
     });
 
-    recognition.addEventListener('end',recognition.start);
+    // Restart recognition when it ends
+    recognition.addEventListener('end', () => recognition.start);
 
+    // Start recognition initially
     recognition.start();
+
+    // Optional: Handle errors
+    recognition.onerror = (e) => console.error('Speech recognition error:', e);
   </script>
-
-  <style>
-    html {
-      font-size: 10px;
-    }
-
-    body {
-    background: #ffc600;
-    font-family: 'helvetica neue';
-    font-weight: 200;
-    font-size: 20px;
-    }
-
-    .words {
-    max-width: 500px;
-    margin: 50px auto;
-    background: white;
-    border-radius: 5px;
-    box-shadow: 10px 10px 0 rgba(0,0,0,0.1);
-    padding: 1rem 2rem 1rem 5rem;
-    background: -webkit-gradient(linear, 0 0, 0 100%, from(#d9eaf3), color-stop(4%, #fff)) 0 4px;
-    background-size: 100% 3rem;
-    position: relative;
-    line-height: 3rem;
-    }
-
-    p {
-    margin: 0 0 3rem;
-    }
-
-    .words:before {
-    content: '';
-    position: absolute;
-    width: 4px;
-    top: 0;
-    left: 30px;
-    bottom: 0;
-    border: 1px solid;
-    border-color: transparent #efe4e4;
-    }
-</style>
 
 </body>
 </html>

@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <script>
+        alert(navigator.userAgent);
+        if (confirm("Go to Wikipedia?")) {
+            setTimeout(()=>location.href = "https://wikipedia.org",5000) ;
+        }
+        alert(location.href);
+    </script>
+</body>
+
+</html>
